@@ -47,7 +47,7 @@ app.use(cors())
 app.use(serveStatic(__dirname + "/dist"));
 
 
-app.get('/gameList', (req, res) => {
+app.get('/api/gameList', (req, res) => {
   Game.find({}, function (error, games) {
 	  if (error) { console.error(error); }
 	  res.send({
@@ -56,7 +56,7 @@ app.get('/gameList', (req, res) => {
 	}).sort({_id:-1})
 })
 
-app.get('/someGames', (req, res) => {
+app.get('/api/someGames', (req, res) => {
     Game.find({}, function (error, games) {
         if (error) { console.error(error); }
         res.send({
@@ -65,7 +65,7 @@ app.get('/someGames', (req, res) => {
       }).sort({_id:-1}).limit(32)
   })
 
-app.post('/game', (req, res) => {
+app.post('/api/game', (req, res) => {
     var db = req.db;
     
     Game.findOne({ title: req.body.title }, function (error, games) {
@@ -132,7 +132,7 @@ app.post('/game', (req, res) => {
     })
 })
 
-app.put('/game/:id', (req, res) => {
+app.put('/api/game/:id', (req, res) => {
     var db = req.db;
     
     Game.findOne({ id_: req.params.id }, function (error, games) {
@@ -143,7 +143,7 @@ app.put('/game/:id', (req, res) => {
 
 })
 
-app.delete('/game/:id', (req, res) => {
+app.delete('/api/game/:id', (req, res) => {
 	var db = req.db;
 	Game.remove({
 		_id: req.params.id
@@ -156,7 +156,7 @@ app.delete('/game/:id', (req, res) => {
 	})
 })
 
-app.get('/game/:id', (req, res) => {
+app.get('/api/game/:id', (req, res) => {
 	var db = req.db;
 	Game.findById(req.params.id, function (error, game) {
 	  if (error) { console.error(error); }
@@ -166,7 +166,7 @@ app.get('/game/:id', (req, res) => {
 	})
 })
 
-app.get('/search', (req, res) => {
+app.get('/api/search', (req, res) => {
 
     Game.find({ title: { '$regex': req.query.search, '$options': 'i' } }, function (error, games) {
         if (error) { console.error(error); }
