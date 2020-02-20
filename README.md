@@ -1,4 +1,5 @@
-# pg2-app
+# Project Games 2
+This project was a summer exploration into the world of web development. "the pricespy of games" was the concept. Although this project is a far cry what I could produce today, when it was conceived it was well beyond anything I had imagined being able to do.
 
 ## Project setup
 ```
