@@ -15,7 +15,7 @@ export default new Router({
       name: 'home',
       component: Home,
       meta: {
-        title: 'Home Page', // Title must be a string.
+          title: 'HomePage', // Title must be a string.
       },
     },
     {
@@ -33,7 +33,7 @@ export default new Router({
         component: Details,
         props: true,
         meta: {
-          title: 'Game Detail', // Title must be a string.
+            title: 'GameDetail', // Title must be a string.
         },
       },
 

@@ -1,26 +1,29 @@
 <template>
-    <v-container>
-        <vue-headful title="Project Games - Home"/>
-        <v-flex xs12 class="text-xs-center" mt-5>
-            <div class='home'>
-                <h1>Home</h1>
-            </div>
-        </v-flex>
-        <v-flex xs12 class="text-xs-center" mt-5>
-            <div class='home'>
-                <p>This is a home page.</p>
-            </div>
-        </v-flex>
+    <v-container fill-height>
+        <vue-headful title="Project Games - Home"></vue-headful>
+        <homeSearch v-on:searchInput="listGames"/>
     </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
+    // @ is an alias to /src
+    import homeSearch from "../components/homeSearch";
+    import GamesService from "../services/GamesService";
 
+    export default {
+        name: 'home',
+        components: {
+            homeSearch,
+        },
+        data: () => ({
+            games: [],
 
-export default {
-  name: 'home',
-  components: {
-  },
-};
+        }),
+        methods: {
+            listGames(query) {
+                this.$router.push({name: 'games', params: {query: query}});
+            }
+
+        }
+    };
 </script>

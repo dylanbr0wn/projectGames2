@@ -14,7 +14,6 @@ export default {
     name: 'Detail',
     props: {
         id: String,
-        games: Array,
     },
     data() {
         return{
@@ -30,10 +29,14 @@ export default {
     },
     methods: {
         getGameDetails() {
-            let gameToDetail = this.games.find(x => x._id === this.id);
-            this.game = gameToDetail;
-            this.title = `Project Games - ${this.game.title}`
-            this.fixGameScore(this.game.rating)
+          GamesService.getGame(this.id)
+                  .then(data => {
+                    this.game = data;
+                    this.title = `Project Games - ${this.game.title}`;
+                    this.fixGameScore(this.game.rating);
+
+                  })
+
         },
         fixGameScore(score) {
             score = String(score);

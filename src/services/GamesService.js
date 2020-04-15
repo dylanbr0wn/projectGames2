@@ -1,30 +1,41 @@
 import Api from '@/services/Api'
 
 export default {
-  fetchGames () {
-    return Api().get('api/gameList')
+  fetchGames() {
+    return Api().get('gameList')
   },
-  fetchSomeGames () {
-    return Api().get('api/someGames')
-  },
-
-  addGame (params) {
-    return Api().post('api/game', params)
-  },
-
-  updatePost (params) {
-    return Api().put('api/game/' + params.id, params)
+  fetchSomeGames(page, itemsPerPage) {
+    return Api().get('games', {
+      params: {
+        page: page,
+        itemsPerPage: itemsPerPage
+      },
+      timeout: 2000,
+    })
   },
 
-  getGame (id) {
-    return Api().get('api/game/' + id)
+  addGame(params) {
+    return Api().post('game', params)
   },
 
-  deletePost (id) {
-    return Api().delete('api/game/' + id)
+  updatePost(params) {
+    return Api().put('game/' + params.id, params)
   },
 
-  searchGame (query) {
-      return Api().get('api/search/', {params:{'search': query}})
+  getGame(id) {
+    return Api().get('game/' + id)
+  },
+
+  deletePost(id) {
+    return Api().delete('game/' + id)
+  },
+
+  searchGame(query) {
+    return Api().get('search/', {
+      params: {
+        search: query
+      },
+      timeout: 2000,
+    })
   }
 }
