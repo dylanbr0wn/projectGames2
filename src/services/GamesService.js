@@ -1,9 +1,7 @@
 import Api from '@/services/Api'
 
 export default {
-  fetchGames() {
-    return Api().get('gameList')
-  },
+
   fetchSomeGames(page, itemsPerPage) {
     return Api().get('games', {
       params: {
@@ -14,28 +12,37 @@ export default {
     })
   },
 
-  addGame(params) {
-    return Api().post('game', params)
+  getListCover(coverList) {
+    return Api().get('listCover/', {
+      params: {
+        coverList: coverList
+      }
+    })
   },
-
-  updatePost(params) {
-    return Api().put('game/' + params.id, params)
-  },
-
-  getGame(id) {
-    return Api().get('game/' + id)
-  },
-
-  deletePost(id) {
-    return Api().delete('game/' + id)
-  },
-
-  searchGame(query) {
+  searchGame(query, page, itemsPerPage) {
     return Api().get('search/', {
       params: {
-        search: query
+        search: query,
+        page: page,
+        itemsPerPage: itemsPerPage
       },
       timeout: 2000,
     })
   }
 }
+// fetchGames() {
+//   return Api().get('gameList')
+// },
+//
+// updatePost(params) {
+//   return Api().put('game/' + params.id, params)
+// },
+//
+// getGame(id) {
+//   return Api().get('game/' + id)
+// },
+//
+// deletePost(id) {
+//   return Api().delete('game/' + id)
+// },
+

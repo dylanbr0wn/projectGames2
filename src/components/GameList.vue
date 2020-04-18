@@ -7,7 +7,55 @@
                     :items-per-page.sync="itemsPerPage"
                     hide-default-footer
                     :page="page"
+
             >
+                <template v-slot:header>
+                    <v-toolbar
+                            :light="!$vuetify.theme.dark"
+                            :dark="$vuetify.theme.dark"
+                            class="mb-1"
+                    >
+                        <v-text-field
+                                @keydown.enter="$emit('searchGames',search)"
+                                class="textsearchbox"
+                                prepend-icon="search"
+                                hide-details
+                                autofocus
+                                label="Search a game"
+                                :disabled="!isLoaded"
+                                v-model="search"
+
+                        ></v-text-field>
+                        <v-spacer>
+                        </v-spacer>
+                        <span
+                                class="mr-4
+                                grey--text"
+                        >
+                            Page {{ page }}
+                            </span>
+                        <v-btn
+                                large
+                                depressed
+                                dark
+                                color="black darken-3"
+                                class="mr-1"
+                                @click="$emit('formerPage')"
+                        >
+                            <v-icon>mdi-chevron-left</v-icon>
+                        </v-btn>
+                        <v-btn
+                                large
+                                depressed
+                                dark
+                                color="black darken-3"
+                                class="ml-1"
+                                @click="$emit('nextPage')"
+                        >
+                            <v-icon>mdi-chevron-right</v-icon>
+                        </v-btn>
+                    </v-toolbar>
+                </template>
 
                 <template v-slot:no-data>
 
@@ -15,15 +63,15 @@
                         <v-col
                                 cols="12"
                                 sm="6"
-                                md="6"
-                                lg="6"
+                                md="4"
+                                lg="4"
                                 v-for="index in itemsPerPage"
                                 :key="index"
                         >
                             <v-skeleton-loader
                                     class="mx-auto"
-                                    type="article"
-                                    height="150"
+                                    type="card"
+                                    height="200"
                             ></v-skeleton-loader>
                         </v-col>
                     </v-row>
@@ -34,80 +82,67 @@
                         <v-col
                                 cols="12"
                                 sm="6"
-                                md="6"
-                                lg="6"
+                                md="4"
+                                lg="4"
                                 v-for="game in props.items"
                                 :key="game.id"
                         >
 
 
                             <v-card
-                                    height="150"
+                                    height="200"
                                     @click.native="$emit('goToDetail',game.id)"
                                     hover
                                     ripple
-                                    :color="getItemColor(game)"
-                                    :dark="isItemDark(game)"
-                                    :light="!isItemDark(game)"
+                                    color="white"
 
                             >
-                                        <span>
-                                            <v-card-title class=" ">
-                                                {{game.name}}
-                                                <v-spacer></v-spacer>
-                                                <v-rating
-                                                        readonly
-                                                        :value="game.aggregated_rating/20"
-                                                        small
-                                                        half-increments
-                                                        :color="getRatingColor(game)"
-                                                        v-if="'aggregated_rating' in game"
-                                                ></v-rating>
-                                            </v-card-title>
 
-                                        </span>
+                                <v-img
+                                        height="140"
+                                        :src="game.coverURL"
+                                        :alt="game.name"
+                                >
 
-                                <v-divider></v-divider>
-                                <v-card-text class="text-truncate ">
-                                    {{game.summary}}
-                                </v-card-text>
+                                </v-img>
+                                <v-card-title class="mt-0 display-block title font-weight-light">
+                                    <span class="text-truncate d-inline-block"
+                                          style="max-width: 250px;"
+                                    >
+                                       {{game.name}}
+                                    </span>
+
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+
+                                            top
+                                            right
+                                            small
+                                            :color="getRatingColor(game.aggregated_rating)"
+                                            v-if="'aggregated_rating' in game"
+                                    >
+                                        <div class="white--text subtitle-2">{{game.aggregated_rating }}%</div>
+                                    </v-btn>
+
+                                    <!--                                    <v-rating-->
+                                    <!--                                            readonly-->
+                                    <!--                                            :value="game.aggregated_rating/20"-->
+                                    <!--                                            :color="getRatingColor(game)"-->
+                                    <!--                                            small-->
+                                    <!--                                            half-increments-->
+                                    <!--                                            v-if="'aggregated_rating' in game"-->
+                                    <!--                                    ></v-rating>-->
+                                </v-card-title>
+                                <!--                                <v-card-text class="text-truncate ">-->
+                                <!--                                    {{game.summary}}-->
+                                <!--                                </v-card-text>-->
                             </v-card>
 
 
                         </v-col>
                     </v-row>
                 </template>
-                <template v-slot:footer>
-                    <v-row class="mt-2" align="center" justify="center">
-                        <v-spacer></v-spacer>
 
-                        <span
-                                class="mr-4
-                                grey--text"
-                        >
-                            Page {{ page }}
-                            </span>
-                        <v-btn
-                                fab
-                                dark
-                                color="black darken-3"
-                                class="mr-1"
-                                @click="$emit('formerPage')"
-                        >
-                            <v-icon>mdi-chevron-left</v-icon>
-                        </v-btn>
-                        <v-btn
-                                fab
-                                dark
-                                color="black darken-3"
-                                class="ml-1"
-                                @click="$emit('nextPage')"
-                        >
-                            <v-icon>mdi-chevron-right</v-icon>
-                        </v-btn>
-                    </v-row>
-
-                </template>
 
             </v-data-iterator>
 
@@ -129,6 +164,7 @@ export default {
     },
     data: () => ({
         itemsPerPageArray: [4, 8, 12],
+        search: '',
         genres: [
             {
                 "id": 13,
@@ -202,12 +238,17 @@ export default {
         isItemDark(game) {
             return this.getItemColor(game) !== "white"
         },
-        getRatingColor(game) {
-            if (this.getItemColor(game) !== "white") {
-                return "black"
+        getRatingColor(rating) {
+            if (90 < rating && rating <= 100) {
+                return "#673ab7"
+            } else if (75 < rating && rating <= 90) {
+                return "#43a047"
+            } else if (50 < rating && rating <= 75) {
+                return "#ff9800"
             } else {
-                return "white"
+                return "#d50000"
             }
+
         }
     }
 };
@@ -229,6 +270,7 @@ export default {
 
     .iteratorTrans {
         transition: all 0.5s;
+        height: 100%;
     }
 
 </style>

@@ -1,35 +1,18 @@
 <template>
     <v-container fill-height>
         <vue-headful title="Project Games - Games"/>
-        <v-toolbar
-                :light="!$vuetify.theme.dark"
-                :dark="$vuetify.theme.dark"
-                style=" position:fixed; top:2vh;z-index: 100"
-
-        >
-            <v-text-field
-                    @keydown.enter="searchGames(query)"
-                    class="textsearchbox"
-                    prepend-icon="search"
-                    hide-details
-                    autofocus
-                    label="Search a game"
-                    :disabled="!isLoaded"
-                    v-model="query"
-
-            ></v-text-field>
 
 
-        </v-toolbar>
-
-
-        <template class="mt-5">
+        <template>
             <v-fade-transition mode="out-in">
                 <GameList
+                        style="height: 100%"
+                        class="align-self-start mt-10 "
                         :isLoaded=isLoaded
                         :games=games
                         :itemsPerPage=itemsPerPage
                         :page=page
+                        v-on:searchGames="searchGames"
                         v-on:goToDetail="goToDetail"
                         v-on:updateItemsPerPage="updateItemsPerPage"
                         v-on:formerPage="formerPage"
@@ -60,9 +43,12 @@ export default {
         }
     },
     data: () => ({
+        lastQuery: '',
         games: [],
+        search: '',
+        gamesTemp: [],
         isLoaded: false,
-        itemsPerPage: 6,
+        itemsPerPage: 9,
         itemsPerPageArray: [4, 8, 12],
         page: 1,
     }),
@@ -78,26 +64,34 @@ export default {
         getGames(page, itemsPerPage) {
             this.isLoaded = false;
             this.games = [];
+            this.gamesTemp = [];
             GamesService.fetchSomeGames(page, itemsPerPage)
                 .then(res => {
-                    this.isLoaded = true;
-                    this.games = res.data;
+
+                    this.gamesTemp = res.data;
+                    this.parseGames();
                 }).catch(function (error) {
                 console.log(error);
             });
 
         },
         searchGames(query) {
+            this.query = query;
             if (query.length === 0) {
                 this.page = 1
                 this.getGames(this.page, this.itemsPerPage)
             } else {
-                this.page = 1
+                if (this.query !== this.lastQuery) {
+                    this.lastQuery = this.query;
+                    this.page = 1;
+                }
                 this.isLoaded = false;
                 this.games = [];
-                GamesService.searchGame(query).then(res => {
-                    this.isLoaded = true;
-                    this.games = res.data
+                this.gamesTemp = [];
+                GamesService.searchGame(query, this.page, this.itemsPerPage).then(res => {
+
+                    this.gamesTemp = res.data;
+                    this.parseGames();
 
 
                 }).catch(function (error) {
@@ -107,29 +101,70 @@ export default {
 
 
         },
+        parseGames() {
+            for (const game of this.gamesTemp) {
+                if ("aggregated_rating" in game) {
+                    game.aggregated_rating = Math.round((game.aggregated_rating + Number.EPSILON))
+                }
+
+            }
+            let coverList = [];
+            for (const game of this.gamesTemp) {
+                if ("cover" in game) {
+                    coverList.push(game.cover);
+                }
+
+            }
+            if (coverList.length !== 0) {
+                GamesService.getListCover(coverList).then(res => {
+                    const data = res.data;
+                    for (const game of this.gamesTemp) {
+                        if ("cover" in game) {
+                            for (let index = 0; index < data.length; index++) {
+                                if (data[index].id === game.cover) {
+                                    game["coverURL"] = `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${data[index].image_id}.jpg`
+                                }
+                            }
+                        }
+                    }
+                    this.games = this.gamesTemp
+                    this.isLoaded = true;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            } else {
+                this.games = this.gamesTemp
+                this.isLoaded = true;
+            }
+
+
+        },
         goToDetail(id) {
             this.$router.push({path: `/game/${id}`});
         },
         nextPage() {
+
             if (this.query.length === 0) {
-                this.isLoaded = false;
-                this.games = [];
                 this.page += 1;
                 this.getGames(this.page, this.itemsPerPage);
-            } else {
-                if (this.page + 1 <= this.numberOfPages) this.page += 1
+            } else if (this.itemsPerPage === this.gamesTemp.length) {
+                this.page += 1;
+                this.searchGames(this.query);
             }
 
 
         },
         formerPage() {
-            if (this.query.length === 0) {
-                this.isLoaded = false;
-                this.games = [];
-                if (this.page - 1 >= 1) this.page -= 1
+            this.isLoaded = false;
+            this.games = [];
+            if (this.query.length === 0 && this.page - 1 >= 1) {
+                this.page -= 1
                 this.getGames(this.page, this.itemsPerPage);
-            } else {
-                if (this.page - 1 >= 1) this.page -= 1
+            } else if (this.page - 1 >= 1) {
+                this.page -= 1;
+                this.searchGames(this.query);
+
+
             }
         },
         updateItemsPerPage(number) {
