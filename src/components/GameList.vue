@@ -87,56 +87,71 @@
                                 v-for="game in props.items"
                                 :key="game.id"
                         >
+                            <v-hover v-slot:default="{ hover }">
+                                <v-card
+                                        height="200"
+                                        @click.native="$emit('goToDetail',game.id)"
+                                        :hover="hover"
+                                        ripple
+                                        color="white"
 
-
-                            <v-card
-                                    height="200"
-                                    @click.native="$emit('goToDetail',game.id)"
-                                    hover
-                                    ripple
-                                    color="white"
-
-                            >
-
-                                <v-img
-                                        height="140"
-                                        :src="game.coverURL"
-                                        :alt="game.name"
                                 >
 
-                                </v-img>
-                                <v-card-title class="mt-0 display-block title font-weight-light">
+                                    <v-img
+                                            height="140"
+                                            :src="game.coverURL"
+                                            :alt="game.name"
+                                    >
+                                        <v-fade-transition>
+                                            <div
+                                                    v-if="hover"
+                                                    class="d-flex transition-fast-in-fast-out"
+                                                    style="height: 100%; background-color: rgba(0,0,0,0.6)"
+                                            >
+                                                <v-btn
+                                                        style="opacity: 100% !important;"
+                                                        class="mx-auto my-auto"
+                                                >
+
+                                                    Details
+                                                </v-btn>
+                                            </div>
+                                        </v-fade-transition>
+
+                                    </v-img>
+                                    <v-card-title class="mt-0 display-block title font-weight-light">
                                     <span class="text-truncate d-inline-block"
                                           style="max-width: 250px;"
                                     >
                                        {{game.name}}
                                     </span>
 
-                                    <v-spacer></v-spacer>
-                                    <v-btn
+                                        <v-spacer></v-spacer>
+                                        <v-btn
 
-                                            top
-                                            right
-                                            small
-                                            :color="getRatingColor(game.aggregated_rating)"
-                                            v-if="'aggregated_rating' in game"
-                                    >
-                                        <div class="white--text subtitle-2">{{game.aggregated_rating }}%</div>
-                                    </v-btn>
+                                                top
+                                                right
+                                                small
+                                                :color="getRatingColor(game.aggregated_rating)"
+                                                v-if="'aggregated_rating' in game"
+                                        >
+                                            <div class="white--text subtitle-2">{{game.aggregated_rating }}%</div>
+                                        </v-btn>
 
-                                    <!--                                    <v-rating-->
-                                    <!--                                            readonly-->
-                                    <!--                                            :value="game.aggregated_rating/20"-->
-                                    <!--                                            :color="getRatingColor(game)"-->
-                                    <!--                                            small-->
-                                    <!--                                            half-increments-->
-                                    <!--                                            v-if="'aggregated_rating' in game"-->
-                                    <!--                                    ></v-rating>-->
-                                </v-card-title>
-                                <!--                                <v-card-text class="text-truncate ">-->
-                                <!--                                    {{game.summary}}-->
-                                <!--                                </v-card-text>-->
-                            </v-card>
+                                        <!--                                    <v-rating-->
+                                        <!--                                            readonly-->
+                                        <!--                                            :value="game.aggregated_rating/20"-->
+                                        <!--                                            :color="getRatingColor(game)"-->
+                                        <!--                                            small-->
+                                        <!--                                            half-increments-->
+                                        <!--                                            v-if="'aggregated_rating' in game"-->
+                                        <!--                                    ></v-rating>-->
+                                    </v-card-title>
+                                    <!--                                <v-card-text class="text-truncate ">-->
+                                    <!--                                    {{game.summary}}-->
+                                    <!--                                </v-card-text>-->
+                                </v-card>
+                            </v-hover>
 
 
                         </v-col>

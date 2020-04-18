@@ -145,9 +145,13 @@ export default {
         nextPage() {
 
             if (this.query.length === 0) {
+                this.isLoaded = false;
+                this.games = [];
                 this.page += 1;
                 this.getGames(this.page, this.itemsPerPage);
             } else if (this.itemsPerPage === this.gamesTemp.length) {
+                this.isLoaded = false;
+                this.games = [];
                 this.page += 1;
                 this.searchGames(this.query);
             }
@@ -155,12 +159,15 @@ export default {
 
         },
         formerPage() {
-            this.isLoaded = false;
-            this.games = [];
+
             if (this.query.length === 0 && this.page - 1 >= 1) {
+                this.isLoaded = false;
+                this.games = [];
                 this.page -= 1
                 this.getGames(this.page, this.itemsPerPage);
             } else if (this.page - 1 >= 1) {
+                this.isLoaded = false;
+                this.games = [];
                 this.page -= 1;
                 this.searchGames(this.query);
 
