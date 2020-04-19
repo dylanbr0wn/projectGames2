@@ -25,6 +25,7 @@
     "vue-scrollmagic": "^1.2.0",
     "vue-select": "^2.6.4",
     "vuetify": "^2.2.19",
+    "express": "^4.17.1",
     "serve-static": "^1.14.1",
     "vuetify-loader": "^1.4.3"
   },
@@ -35,7 +36,6 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
-    "express": "^4.17.1",
     "sass": "^1.26.3",
     "vue-cli-plugin-vuetify": "^2.0.5",
     "vue-template-compiler": "^2.6.11"
