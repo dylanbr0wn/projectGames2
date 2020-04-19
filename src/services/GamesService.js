@@ -7,8 +7,7 @@ export default {
       params: {
         page: page,
         itemsPerPage: itemsPerPage
-      },
-      timeout: 2000,
+      }
     })
   },
 
@@ -25,8 +24,7 @@ export default {
         search: query,
         page: page,
         itemsPerPage: itemsPerPage
-      },
-      timeout: 2000,
+      }
     })
   }
 }
