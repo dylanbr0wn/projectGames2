@@ -16,7 +16,7 @@ app.use(cors())
 // app.use(serveStatic(path.join(__dirname, '/dist')))
 
 app.get('/.well-known/acme-challenge/:content', function(req, res) {
-    res.send('nl1tNAwgB2H-UotZhot88C_NcbpYUfsmKn3cvZTfu5g.Wb8CZdX0yd3r5sR72JXP91gNsPhngWZLi8jvoNQN4no')
+    res.send('iWlXXNyH5BvzPDME6HnC8ecC1n_yKllLRHfxvch1Dn8.Wb8CZdX0yd3r5sR72JXP91gNsPhngWZLi8jvoNQN4no')
 })
 
 
