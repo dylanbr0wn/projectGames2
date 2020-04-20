@@ -13,11 +13,12 @@ app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 
-app.use(function(request, response){
-    if(!request.secure){
-        response.redirect("https://" + request.headers.host + request.url);
-    }
-});
+// app.use(function(req, res,next){
+//     if(!req.secure){
+//         res.redirect("https://" + req.headers.host + req.url);
+//     }
+//     return next()
+// });
 app.use(history())
 
 
