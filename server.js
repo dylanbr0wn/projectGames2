@@ -12,13 +12,15 @@ const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
-app.use(history())
 
 app.use(function(request, response){
     if(!request.secure){
         response.redirect("https://" + request.headers.host + request.url);
     }
 });
+app.use(history())
+
+
 
 //Serve the Vue server
 app.use(express.static('dist'))
