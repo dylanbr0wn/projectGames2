@@ -5,15 +5,17 @@ const cors = require('cors')
 const morgan = require('morgan')
 const express = require('express')
 const path = require('path')
+const history = require('connect-history-api-fallback');
 
 
 const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
+app.use(history())
 
 //Serve the Vue server
-app.use(serveStatic(path.join(__dirname, '/dist')))
+app.use(express.static('dist'))
 
 
 
