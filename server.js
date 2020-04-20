@@ -14,7 +14,7 @@ app.use(cors());
 app.use(compression());
 
 app.use(function(req, res,next){
-    if(req.headers["x-forwarded-proto"] === "https"){
+    if (req.headers["x-forwarded-proto"] === "https" || req.hostname == "localhost") {
         return next()
     }
     res.redirect("https://" + req.hostname + req.url);
