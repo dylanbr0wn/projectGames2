@@ -13,12 +13,12 @@ app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 
-// app.use(function(req, res,next){
-//     if(!req.secure){
-//         res.redirect("https://" + req.headers.host + req.url);
-//     }
-//     return next()
-// });
+app.use(function(req, res,next){
+    if(req.headers["x-forwarded-proto"] === "https"){
+        return next()
+    }
+    res.redirect("https://" + req.hostname + req.url);
+});
 app.use(history())
 
 
