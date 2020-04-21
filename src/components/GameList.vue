@@ -137,23 +137,9 @@
                                         >
                                             <div class="white--text subtitle-2">{{game.aggregated_rating }}%</div>
                                         </v-btn>
-
-                                        <!--                                    <v-rating-->
-                                        <!--                                            readonly-->
-                                        <!--                                            :value="game.aggregated_rating/20"-->
-                                        <!--                                            :color="getRatingColor(game)"-->
-                                        <!--                                            small-->
-                                        <!--                                            half-increments-->
-                                        <!--                                            v-if="'aggregated_rating' in game"-->
-                                        <!--                                    ></v-rating>-->
                                     </v-card-title>
-                                    <!--                                <v-card-text class="text-truncate ">-->
-                                    <!--                                    {{game.summary}}-->
-                                    <!--                                </v-card-text>-->
                                 </v-card>
                             </v-hover>
-
-
                         </v-col>
                     </v-row>
                 </template>

@@ -8,8 +8,6 @@
 <script>
     // @ is an alias to /src
     import homeSearch from "../components/homeSearch";
-    import GamesService from "../services/GamesService";
-
     export default {
         name: 'home',
         components: {

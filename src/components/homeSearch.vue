@@ -6,13 +6,13 @@
             <v-col>
                 <div>
                     <p class=" display-3 text-center"
-                    >PROJECT G
+                    >PR
                         <transition name="rotate" mode="out-in">
                             <v-icon
                                     v-if="!$vuetify.theme.dark"
                                     size="45px"
                                     color="black"
-                                    class="mb-2 mx-1"
+                                    class="mb-2 "
                                     :key="new Date().getTime()"
 
                             >
@@ -22,14 +22,14 @@
                                     v-if="$vuetify.theme.dark"
                                     size="45px"
                                     color="white"
-                                    class="mb-2 mx-1"
+                                    class="mb-2 "
                                     :key="new Date().getTime()"
 
                             >
                                 {{mainIcon}}
                             </v-icon>
                         </transition>
-                        MES
+                        JECT GAMES
                     </p>
                 </div>
             </v-col>

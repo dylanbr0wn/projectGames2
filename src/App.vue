@@ -2,9 +2,9 @@
     <div id="app">
         <v-app :style="{background: $vuetify.theme.themes[isDark].background}">
 
-            <v-navigation-drawer absolute app dark expand-on-hover permanent v-model="drawer">
+            <v-navigation-drawer disable-route-watcher absolute app dark expand-on-hover permanent>
                 <v-list subheader two-line>
-                    <v-list-item @click="drawer = false" to='/'>
+                    <v-list-item to='/'>
                         <v-list-item-action>
                             <v-icon>home</v-icon>
                         </v-list-item-action>
@@ -13,7 +13,7 @@
                             <v-list-item-subtitle> Its comfortable here</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item @click="drawer = false" to='/games'>
+                    <v-list-item to='/games'>
                         <v-list-item-action>
                             <v-icon>games</v-icon>
                         </v-list-item-action>
@@ -22,7 +22,7 @@
                             <v-list-item-subtitle>Go find some games!</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item @click="drawer = false">
+                    <v-list-item @click.stop="">
                         <v-list-item-action>
                             <v-icon>person</v-icon>
                         </v-list-item-action>
@@ -33,18 +33,29 @@
                     </v-list-item>
                 </v-list>
                 <template v-slot:append>
-                    <div class="pa-2">
-                        <v-btn @click="$vuetify.theme.dark = !$vuetify.theme.dark" block dark
-                               ripple v-if="!$vuetify.theme.dark">
-                            <v-icon>brightness_3</v-icon>
-                            Join the Dark Side
-                        </v-btn>
-                        <v-btn @click="$vuetify.theme.dark = !$vuetify.theme.dark" block light
-                               ripple v-if="$vuetify.theme.dark">
-                            <v-icon>brightness_5</v-icon>
-                            Return to the Light
-                        </v-btn>
-                    </div>
+                    <v-list subheader two-line>
+
+                        <v-list-item v-if="!$vuetify.theme.dark"
+                                     @click.stop="$vuetify.theme.dark = !$vuetify.theme.dark">
+                            <v-list-item-action>
+                                <v-icon>brightness_3</v-icon>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                                <v-list-item-title>Dark Mode</v-list-item-title>
+                                <v-list-item-subtitle>Join the Dark Side</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item v-if="$vuetify.theme.dark"
+                                     @click.stop="$vuetify.theme.dark = !$vuetify.theme.dark">
+                            <v-list-item-action>
+                                <v-icon>brightness_5</v-icon>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                                <v-list-item-title>Light Mode</v-list-item-title>
+                                <v-list-item-subtitle>Return to the Light</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
                 </template>
 
             </v-navigation-drawer>
@@ -95,18 +106,8 @@
 </template>
 
 <script>
-    import Games from './components/GameList.vue';
-
-
-    // const fb = require('@/firebaseConfig');
-
-
     export default {
         name: 'app',
-        components: {
-            Games,
-        },
-        watch: {},
         data: () => ({
             drawer: false,
             goDark: false,
@@ -131,19 +132,7 @@
                 return (this.$vuetify.theme.dark) ? 'dark' : 'light'
             }
         },
-        methods: {
-            // async searchGames() {
-            //     if (this.query && this.query !== this.lastquery) {
-            //         this.lastquery = this.query;
-            //         const response = await GamesService.searchGame(this.query);
-            //         this.games = response.data;
-            //     } else if (!this.query && this.query !== this.lastquery) {
-            //         this.lastquery = this.query;
-            //         this.getGames();
-            //     }
-            //     this.$router.push({name: 'games'});
-            // },
-        },
+        methods: {},
     };
 </script>
 
