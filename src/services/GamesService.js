@@ -18,6 +18,41 @@ export default {
       }
     })
   },
+  getCompanies(companyList) {
+    return Api().get('gameCompanies/', {
+      params: {
+        companyList: companyList
+      }
+    })
+  },
+  getCompanyNames(companyNames) {
+    return Api().get('companyNames/', {
+      params: {
+        companyNames: companyNames
+      }
+    })
+  },
+  getRelatedGames(gameList) {
+    return Api().get('relatedGames/', {
+      params: {
+        gameList: gameList
+      }
+    })
+  },
+  getCover(cover) {
+    return Api().get('cover/', {
+      params: {
+        cover: cover
+      }
+    })
+  },
+  getArtworks(artworks) {
+    return Api().get('artworks/', {
+      params: {
+        artworks: artworks
+      }
+    })
+  },
   searchGame(query, page, itemsPerPage) {
     return Api().get('search/', {
       params: {
@@ -26,7 +61,14 @@ export default {
         itemsPerPage: itemsPerPage
       }
     })
-  }
+  },
+  getGame(id) {
+    return Api().get('gameDetails', {
+      params: {
+        id: id
+      }
+    })
+  },
 }
 // fetchGames() {
 //   return Api().get('gameList')
@@ -36,9 +78,7 @@ export default {
 //   return Api().put('game/' + params.id, params)
 // },
 //
-// getGame(id) {
-//   return Api().get('game/' + id)
-// },
+
 //
 // deletePost(id) {
 //   return Api().delete('game/' + id)

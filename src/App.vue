@@ -2,7 +2,7 @@
     <div id="app">
         <v-app :style="{background: $vuetify.theme.themes[isDark].background}">
 
-            <v-navigation-drawer disable-route-watcher absolute app dark expand-on-hover permanent>
+            <v-navigation-drawer disable-route-watcher absolute app dark expand-on-hover permanent height="100%">
                 <v-list subheader two-line>
                     <v-list-item to='/'>
                         <v-list-item-action>

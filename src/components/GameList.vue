@@ -121,7 +121,7 @@
                                     </v-img>
                                     <v-card-title class="mt-0 display-block title font-weight-light">
                                     <span class="text-truncate d-inline-block"
-                                          style="max-width: 250px;"
+                                          style="max-width: 80%;"
                                     >
                                        {{game.name}}
                                     </span>

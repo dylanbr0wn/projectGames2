@@ -20,7 +20,6 @@ app.use(function(req, res,next){
     res.redirect("https://" + req.hostname + req.url);
 });
 app.use(history());
-//Serve the Vue server
 app.use(express.static('dist'));
 
 const port = process.env.PORT || 5000;
