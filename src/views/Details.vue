@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <GameDetails v-if="isLoaded" :game=game :companies="companies"/>
+    <GameDetails v-if="isLoaded" :game=game :companies="companies" :coverURL="coverURL"/>
   </v-container>
 </template>
 
@@ -17,6 +17,7 @@ export default {
     data() {
         return {
           game: {},
+          coverURL: '',
           relatedGames: [],
           isLoaded: false,
           companies: [],
@@ -132,7 +133,7 @@ export default {
         GamesService.getGame(this.id).then(res => {
           this.game = res.data[0]
           this.parseGame();
-          this.isLoaded = true
+
         })
       },
       parseGame() {
@@ -147,6 +148,7 @@ export default {
         this.parseArtworks();
         this.parseCompanies();
         this.getRelatedGames();
+        this.isLoaded = true
 
 
       },
@@ -178,7 +180,7 @@ export default {
       },
       parseCover() {
         GamesService.getCover(this.game.cover).then(res => {
-          this.game["coverURL"] = `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${res.data[0].image_id}.jpg`
+          this.coverURL = `https://images.igdb.com/igdb/image/upload/t_screenshot_big/${res.data[0].image_id}.jpg`
         }).catch(function (error) {
           console.log(error);
         });
