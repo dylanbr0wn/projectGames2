@@ -39,6 +39,13 @@ export default {
       }
     })
   },
+  getPlatforms(platforms) {
+    return Api().get('getPlatforms/', {
+      params: {
+        platforms: platforms
+      }
+    })
+  },
   getCover(cover) {
     return Api().get('cover/', {
       params: {

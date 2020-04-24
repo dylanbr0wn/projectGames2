@@ -1,6 +1,15 @@
 <template>
   <v-container fluid fill-height>
-    <GameDetails v-if="isLoaded" :game=game :companies="companies" :coverURL="coverURL"/>
+    <GameDetails
+            :game=game
+            :companies="companies"
+            :coverURL="coverURL"
+            :relatedGames="relatedGames"
+            :isLoaded="isLoaded"
+            v-on:goToDetail="goToDetail"
+            :relatedLoaded="relatedLoaded"
+
+    />
   </v-container>
 </template>
 
@@ -20,6 +29,7 @@ export default {
           coverURL: '',
           relatedGames: [],
           isLoaded: false,
+          relatedLoaded: false,
           companies: [],
           gameModes: [
             {
@@ -121,7 +131,7 @@ export default {
         GameDetails,
     },
     created() {
-        this.getGameDetails();
+      this.getGameDetails(this.id);
     },
     methods: {
       fixGameScore(score) {
@@ -129,8 +139,8 @@ export default {
         const fixed = score.replace(/\/\d/i, '');
         this.game.rating = Number(fixed);
       },
-      getGameDetails() {
-        GamesService.getGame(this.id).then(res => {
+      getGameDetails(id) {
+        GamesService.getGame(id).then(res => {
           this.game = res.data[0]
           this.parseGame();
 
@@ -148,6 +158,7 @@ export default {
         this.parseArtworks();
         this.parseCompanies();
         this.getRelatedGames();
+        this.parsePlatforms();
         this.isLoaded = true
 
 
@@ -189,11 +200,7 @@ export default {
         if ("artworks" in this.game) {
           GamesService.getArtworks(this.game.artworks).then(res => {
             const data = res.data;
-            const artworks = [];
-            for (let art of data) {
-              artworks.push(`https://images.igdb.com/igdb/image/upload/t_720p/${art.image_id}.jpg`)
-            }
-            this.game["artworks"] = artworks;
+            this.game["artworks"] = data.map(art => `https://images.igdb.com/igdb/image/upload/t_720p/${art.image_id}.jpg`)
           }).catch(function (error) {
             console.log(error)
           });
@@ -216,6 +223,15 @@ export default {
                 }
               }
             })
+          }).catch(function (error) {
+            console.log(error)
+          });
+        }
+      },
+      parsePlatforms() {
+        if ("platforms" in this.game) {
+          GamesService.getPlatforms(this.game.platforms).then(res => {
+            this.game.platforms = res.data
           }).catch(function (error) {
             console.log(error)
           });
@@ -258,6 +274,7 @@ export default {
                 }
               }
             }
+            this.relatedLoaded = true;
 
           }).catch(function (error) {
             console.log(error);
@@ -265,6 +282,16 @@ export default {
         }
 
 
+      },
+      goToDetail(id) {
+        this.isLoaded = false;
+        this.game = {};
+        this.coverURL = '';
+        this.relatedGames = [];
+        this.companies = [];
+        this.relatedLoaded = false;
+
+        this.getGameDetails(id);
       },
 
     },
