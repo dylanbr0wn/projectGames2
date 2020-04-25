@@ -304,13 +304,22 @@ export default {
             return this.companies.filter(comp => comp.porting === true).map(dev => dev.company).join(', ')
         },
         getSupporting() {
+
             return this.companies.filter(comp => comp.supporting === true).map(dev => dev.company).join(', ')
         },
         getGameModes() {
-            return this.game.game_modes.map(mode => mode.name).join(', ')
+            if ("game_modes" in this.game) {
+                return this.game.game_modes.map(mode => mode.name).join(', ')
+            } else {
+                return ''
+            }
         },
         getPlatforms() {
-            return this.game.platforms.map(plat => plat.name).join(', ')
+            if ("platforms" in this.game) {
+                return this.game.platforms.map(plat => plat.name).join(', ')
+            } else {
+                return ''
+            }
         },
         getImages() {
             let images = this.game.artworks.slice()
