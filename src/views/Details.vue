@@ -14,21 +14,21 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import GameDetails from '@/components/GameDetails.vue';
-import GamesService from '@/services/GamesService';
+  // @ is an alias to /src
+  import GameDetails from '@/components/GameDetails.vue';
+  import GamesService from '@/services/GamesService';
 
-export default {
+  export default {
     name: 'Detail',
     props: {
-        id: String,
+      id: String,
     },
     data() {
-        return {
-          game: {},
-          coverURL: '',
-          relatedGames: [],
-          isLoaded: false,
+      return {
+        game: {},
+        coverURL: '',
+        relatedGames: [],
+        isLoaded: false,
           relatedLoaded: false,
           companies: [],
           gameModes: [
@@ -153,8 +153,8 @@ export default {
         if ("aggregated_rating" in this.game) {
           this.game.aggregated_rating = Math.round((this.game.aggregated_rating + Number.EPSILON))
         }
-        this.parseGenre(this.game.genres);
-        this.parseGameMode(this.game.game_modes);
+        this.parseGenre();
+        this.parseGameMode();
         this.parseArtworks();
         this.parseCompanies();
         this.getRelatedGames();
@@ -163,31 +163,38 @@ export default {
 
 
       },
-      parseGenre(gameGenres) {
-        const tempGenres = gameGenres;
-        for (let i = 0; i < gameGenres.length; i++) {
-          for (const gene of this.genres) {
-            if (gene.id === gameGenres[i]) {
-              tempGenres[i] = gene.name;
-              break;
+      parseGenre() {
+        if ("genres" in this.game) {
+          const tempGenres = this.game.genres;
+          for (let i = 0; i < this.game.genres.length; i++) {
+            for (const gene of this.genres) {
+              if (gene.id === this.game.genres[i]) {
+                tempGenres[i] = gene.name;
+                break;
 
+              }
             }
           }
+          this.game.genres = tempGenres;
         }
-        this.game.genres = tempGenres;
+
       },
-      parseGameMode(gameModes) {
-        const tempModes = gameModes;
-        for (let i = 0; i < gameModes.length; i++) {
-          for (const mode of this.gameModes) {
-            if (mode.id === gameModes[i]) {
-              tempModes[i] = mode;
-              break;
+      parseGameMode() {
+        if ("game_modes" in this.game) {
+          const gameModes = this.game.game_modes;
+          for (let i = 0; i < gameModes.length; i++) {
+            for (const mode of this.gameModes) {
+              if (mode.id === gameModes[i]) {
+                gameModes[i] = mode;
+                break;
 
+              }
             }
           }
+          this.game.game_modes = gameModes;
         }
-        this.game.game_modes = tempModes;
+
+
       },
       parseCover() {
         GamesService.getCover(this.game.cover).then(res => {
