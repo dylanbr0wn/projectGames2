@@ -46,6 +46,13 @@ export default {
       }
     })
   },
+  getAgeRatings(ratings) {
+    return Api().get('ageRatings/', {
+      params: {
+        ratings: ratings
+      }
+    })
+  },
   getCover(cover) {
     return Api().get('cover/', {
       params: {

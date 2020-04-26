@@ -8,6 +8,7 @@
             :isLoaded="isLoaded"
             v-on:goToDetail="goToDetail"
             :relatedLoaded="relatedLoaded"
+            :ratingLoaded="ratingLoaded"
 
     />
   </v-container>
@@ -29,17 +30,18 @@
         coverURL: '',
         relatedGames: [],
         isLoaded: false,
-          relatedLoaded: false,
-          companies: [],
-          gameModes: [
-            {
-              "id": 3,
-              "created_at": 1298937600,
-              "name": "Co-operative",
-              "slug": "co-operative",
-              "updated_at": 1323216000,
-              "url": "https://www.igdb.com/game_modes/co-operative"
-            },
+        relatedLoaded: false,
+        ratingLoaded: false,
+        companies: [],
+        gameModes: [
+          {
+            "id": 3,
+            "created_at": 1298937600,
+            "name": "Co-operative",
+            "slug": "co-operative",
+            "updated_at": 1323216000,
+            "url": "https://www.igdb.com/game_modes/co-operative"
+          },
             {
               "id": 1,
               "created_at": 1298937600,
@@ -157,8 +159,10 @@
         this.parseGameMode();
         this.parseArtworks();
         this.parseCompanies();
-        this.getRelatedGames();
+
         this.parsePlatforms();
+        this.parseAgeRatings();
+        this.getRelatedGames();
         this.isLoaded = true
 
 
@@ -244,6 +248,16 @@
           });
         }
       },
+      parseAgeRatings() {
+        if ("age_ratings" in this.game) {
+          GamesService.getAgeRatings(this.game.age_ratings).then(res => {
+            this.game.age_ratings = res.data;
+            this.ratingLoaded = true;
+          }).catch(function (error) {
+            console.log(error)
+          });
+        }
+      },
       getRelatedGames() {
 
         GamesService.getRelatedGames(this.game.similar_games)
@@ -297,6 +311,7 @@
         this.relatedGames = [];
         this.companies = [];
         this.relatedLoaded = false;
+        this.ratingLoaded = false;
 
         this.getGameDetails(id);
       },

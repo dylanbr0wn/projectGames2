@@ -38,12 +38,18 @@
                     </v-img>
 
                 </v-card>
-                <v-skeleton-loader
-                        v-if="!isLoaded"
+                <v-card height="550"
                         class="mx-auto mt-10"
-                        type="actions,card-heading, list-item-two-line, list-item-two-line, list-item,article, article"
-                        height="550"
-                ></v-skeleton-loader>
+                        v-if="!isLoaded"
+                >
+                    <v-skeleton-loader
+
+
+                            type="actions,card-heading, list-item-two-line, list-item,article, article"
+
+                    ></v-skeleton-loader>
+                </v-card>
+
                 <v-card
                         v-if="isLoaded"
                         height="550"
@@ -253,11 +259,72 @@
                     md="4"
                     lg="4"
             >
+                <v-card height="550"
+                        v-if="!ratingLoaded"
+                >
+                    <v-skeleton-loader
+
+                            type="card-heading,list-item-avatar-two-line, list-item-three-line, divider, card-heading,list-item ,list-item-two-line,list-item-two-line,list-item-two-line"
+
+                    ></v-skeleton-loader>
+                </v-card>
+
                 <v-card
+                        v-if="ratingLoaded"
                         height="550"
                         hover
                 >
-                    asdasd
+                    <div class="d-flex display-1 font-weight-light align-content-center justify-center pa-5">Reviews
+                    </div>
+                    <div class="d-flex align-content-center display-2 justify-center"
+                         v-if="'aggregated_rating' in game"
+                    >{{game.aggregated_rating}}%
+                    </div>
+                    <div class="d-flex align-content-center title justify-center"
+                         v-if="!('aggregated_rating' in game)"
+                         style="height: 150px"
+                    >No review data available.
+                    </div>
+                    <div class="d-flex align-content-center justify-center"
+                         v-if="'aggregated_rating' in game"
+                         style=""
+                    >
+
+
+                        <v-rating
+
+                                :value="game.aggregated_rating/20"
+                                readonly
+                                large
+                                background-color="black"
+                                color="black"
+                        ></v-rating>
+                    </div>
+                    <div class="d-flex align-content-center justify-center"
+                         v-if="'aggregated_rating' in game"
+                    >Average from {{game.aggregated_rating_count}} reviews
+                    </div>
+                    <v-divider class="my-3"></v-divider>
+                    <div class="d-flex display-1 font-weight-light align-content-center justify-center pa-2">Age
+                        Rating
+                    </div>
+                    <div class="d-flex pa-2">
+
+                        <v-img :src="age_ratings[game.age_ratings[0].rating]"
+                               height="80"
+                               contain
+                               width="100"
+                               class="ml-5"
+                        >
+                        </v-img>
+                        <div class="d-flex align-content-center justify-center ml-2">{{getAgeRating}}</div>
+
+                    </div>
+                    <div class="d-flex px-7 body-2 mt-2" style="overflow: scroll; height: 140px">
+                        {{game.age_ratings[0].synopsis}}
+                    </div>
+
+
                 </v-card>
                 <v-card
                         height="200"
@@ -284,12 +351,22 @@ export default {
         coverURL: String,
         relatedGames: Array,
         isLoaded: Boolean,
-        relatedLoaded: Boolean
+        relatedLoaded: Boolean,
+        ratingLoaded: Boolean
     },
     data() {
         return {
             tab: null,
-            dialog: null
+            dialog: null,
+            age_ratings: {
+                6: require('@/assets/ESRB-ver2013_RP.png'),
+                7: require('@/assets/ESRB-ver2013_eC.png'),
+                8: require('@/assets/ESRB-ver2013_E.png'),
+                9: require('@/assets/ESRB-ver2013_E10-Plus.png'),
+                10: require('@/assets/ESRB-ver2013_T.png'),
+                11: require('@/assets/ESRB-ver2013_M.png'),
+                12: require('@/assets/ESRB-ver2013_Ao.png')
+            }
         };
     },
     methods: {},
@@ -328,6 +405,17 @@ export default {
             }
             return images
         },
+        getAgeRating() {
+            if ("age_ratings" in this.game) {
+                if ("content_descriptions" in this.game.age_ratings[0]) {
+                    return this.game.age_ratings[0].content_descriptions.map(desc => desc.description).join(', ')
+                } else {
+                    return "Content descriptions unavailable."
+                }
+            } else {
+                return ''
+            }
+        }
 
     },
     created() {
