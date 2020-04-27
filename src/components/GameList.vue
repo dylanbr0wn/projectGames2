@@ -99,7 +99,7 @@
 
                                     <v-img
                                             height="140"
-                                            :src="game.coverURL"
+                                            :src="getCoverURL(game)"
                                             :alt="game.name"
                                     >
                                         <v-fade-transition>
@@ -250,7 +250,14 @@ export default {
                 return "#d50000"
             }
 
-        }
+        },
+        getCoverURL(game) {
+            if ("cover" in game) {
+                return `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${game.cover.image_id}.jpg`
+            } else {
+                return ''
+            }
+        },
     }
 };
 </script>

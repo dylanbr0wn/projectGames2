@@ -24,8 +24,9 @@
 
                     <v-img
                             height="200"
-                            :src="coverURL"
+                            :src="getCoverURL"
                             :alt="game.name"
+                            :lazy-src="getLazyCoverURL"
                     >
                         <v-row align="center" class="bottom-gradient white--text pa-2 fill-height">
                             <v-col>
@@ -75,8 +76,8 @@
                     >
                         <v-tab-item>
                             <v-card flat style="height: 100%">
-                                <v-card-subtitle v-if="game.genres.length !== 0" class="subtitle-1 py-1 ml-5 mt-4">
-                                    Genre: <span class="body-2">{{game.genres.join(', ')}}</span>
+                                <v-card-subtitle v-if="getGenres !== ''" class="subtitle-1 py-1 ml-5 mt-4">
+                                    Genre: <span class="body-2">{{getGenres}}</span>
                                     <v-divider></v-divider>
                                 </v-card-subtitle>
                                 <v-card-subtitle v-if="getGameModes !== ''" class="subtitle-1 py-1 ml-5">Game Modes:
@@ -127,11 +128,11 @@
                                             md="4"
                                     >
                                         <v-dialog
-                                                width="700"
+                                                max-width="700"
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-img
-                                                        :src="getImages[i-1]"
+                                                        :src="getThumbImages[i-1]"
                                                         :alt="'artwork-'+ i"
                                                         max-height="110"
                                                         v-on="on"
@@ -152,7 +153,7 @@
                                                     :src="getImages[i-1]"
                                                     :alt="'artwork-'+ i"
                                                     contain
-                                                    width="700"
+                                                    max-width="1000"
                                                     align="center"
                                                     justify="center"
                                             >
@@ -185,25 +186,25 @@
                                     <v-col
 
 
-                                            v-for="i in relatedGames.length"
+                                            v-for="i in game.similar_games.length"
                                             :key="i"
                                             cols="12"
                                             md="4"
                                     >
                                         <v-skeleton-loader
-                                                v-if="!relatedLoaded"
+                                                v-if="!isLoaded"
                                                 type="card"
                                                 height="150"
                                         ></v-skeleton-loader>
                                         <v-hover v-slot:default="{ hover }"
-                                                 v-if="relatedLoaded"
+                                                 v-if="isLoaded"
 
                                         >
 
                                             <v-card
 
                                                     height="150"
-                                                    @click.native="$emit('goToDetail',relatedGames[i-1].id)"
+                                                    @click.native="$emit('goToDetail',game.similar_games[i-1].id)"
                                                     :hover="hover"
                                                     ripple
                                                     color="white"
@@ -212,8 +213,8 @@
 
                                                 <v-img
                                                         height="110"
-                                                        :src="relatedGames[i-1].coverURL"
-                                                        :alt="relatedGames[i-1].name"
+                                                        :src="getRelatedCover(game.similar_games[i-1])"
+                                                        :alt="game.similar_games[i-1].name"
                                                 >
                                                     <v-fade-transition>
                                                         <div
@@ -236,7 +237,7 @@
                                                         class="mt-0 py-2  display-block subtitle-2 font-weight-light">
                                                 <span class="text-truncate d-inline-block"
                                                 >
-                                                   {{relatedGames[i-1].name}}
+                                                   {{game.similar_games[i-1].name}}
                                                 </span>
 
 
@@ -260,7 +261,7 @@
                     lg="4"
             >
                 <v-card height="550"
-                        v-if="!ratingLoaded"
+                        v-if="!isLoaded"
                 >
                     <v-skeleton-loader
 
@@ -270,7 +271,7 @@
                 </v-card>
 
                 <v-card
-                        v-if="ratingLoaded"
+                        v-if="isLoaded"
                         height="550"
                         hover
                 >
@@ -347,12 +348,7 @@ export default {
     name: 'GameDetails',
     props: {
         game: Object,
-        companies: Array,
-        coverURL: String,
-        relatedGames: Array,
         isLoaded: Boolean,
-        relatedLoaded: Boolean,
-        ratingLoaded: Boolean
     },
     data() {
         return {
@@ -369,20 +365,47 @@ export default {
             }
         };
     },
-    methods: {},
+    methods: {
+        getRelatedCover(game) {
+            if ("cover" in game) {
+                return `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${game.cover.image_id}.jpg`
+            } else {
+                return ''
+            }
+        }
+
+
+    },
     computed: {
         getDeveloper() {
-            return this.companies.filter(comp => comp.developer === true).map(dev => dev.company).join(', ')
+            if ("involved_companies" in this.game) {
+                return this.game.involved_companies.filter(comp => comp.developer === true).map(dev => dev.company.name).join(', ')
+            } else {
+                return ''
+            }
         },
         getPublisher() {
-            return this.companies.filter(comp => comp.publisher === true).map(dev => dev.company).join(', ')
+            if ("involved_companies" in this.game) {
+
+                return this.game.involved_companies.filter(comp => comp.publisher === true).map(dev => dev.company.name).join(', ')
+            } else {
+                return ''
+            }
+
         },
         getPorter() {
-            return this.companies.filter(comp => comp.porting === true).map(dev => dev.company).join(', ')
+            if ("involved_companies" in this.game) {
+                return this.game.involved_companies.filter(comp => comp.porting === true).map(dev => dev.company.name).join(', ')
+            } else {
+                return ''
+            }
         },
         getSupporting() {
-
-            return this.companies.filter(comp => comp.supporting === true).map(dev => dev.company).join(', ')
+            if ("involved_companies" in this.game) {
+                return this.game.involved_companies.filter(comp => comp.supporting === true).map(comp => comp.company.name).join(', ')
+            } else {
+                return ''
+            }
         },
         getGameModes() {
             if ("game_modes" in this.game) {
@@ -399,9 +422,16 @@ export default {
             }
         },
         getImages() {
-            let images = this.game.artworks.slice()
-            if (this.coverURL !== '') {
-                images.push(this.coverURL)
+            let images = this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_1080p/${art.image_id}.jpg`).slice()
+            if (this.getCoverURL !== '') {
+                images.push(this.getCoverURL)
+            }
+            return images
+        },
+        getThumbImages() {
+            let images = this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${art.image_id}.jpg`).slice()
+            if (this.getCoverURL !== '') {
+                images.push(this.getCoverURL)
             }
             return images
         },
@@ -415,10 +445,30 @@ export default {
             } else {
                 return ''
             }
+        },
+        getCoverURL() {
+            if ("cover" in this.game) {
+                return `https://images.igdb.com/igdb/image/upload/t_1080p/${this.game.cover.image_id}.jpg`
+            } else {
+                return ''
+            }
+        },
+        getLazyCoverURL() {
+            if ("cover" in this.game) {
+                return `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${this.game.cover.image_id}.jpg`
+            } else {
+                return ''
+            }
+        },
+        getGenres() {
+            if ("genres" in this.game) {
+                return this.game.genres.map(genre => genre.name).join(', ')
+            } else {
+                return ''
+            }
         }
 
-    },
-    created() {
+
     }
 };
 </script>

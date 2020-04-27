@@ -67,7 +67,6 @@ export default {
             this.gamesTemp = [];
             GamesService.fetchSomeGames(page, itemsPerPage)
                 .then(res => {
-
                     this.gamesTemp = res.data;
                     this.parseGames();
                 }).catch(function (error) {
@@ -93,7 +92,6 @@ export default {
                     this.gamesTemp = res.data;
                     this.parseGames();
 
-
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -108,36 +106,8 @@ export default {
                 }
 
             }
-            let coverList = [];
-            for (const game of this.gamesTemp) {
-                if ("cover" in game) {
-                    coverList.push(game.cover);
-                }
-
-            }
-            if (coverList.length !== 0) {
-                GamesService.getListCover(coverList).then(res => {
-                    const data = res.data;
-                    for (const game of this.gamesTemp) {
-                        if ("cover" in game) {
-                            for (let index = 0; index < data.length; index++) {
-                                if (data[index].id === game.cover) {
-                                    game["coverURL"] = `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${data[index].image_id}.jpg`
-                                }
-                            }
-                        }
-                    }
-                    this.games = this.gamesTemp
-                    this.isLoaded = true;
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            } else {
                 this.games = this.gamesTemp
                 this.isLoaded = true;
-            }
-
-
         },
         goToDetail(id) {
             this.$router.push({path: `/game/${id}`});
