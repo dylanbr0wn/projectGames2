@@ -486,7 +486,8 @@ export default {
                 images.push(this.getCoverURL)
             }
             if ("artworks" in this.game) {
-                images.concat(this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_1080p/${art.image_id}.jpg`).slice())
+                let artworks = this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_1080p/${art.image_id}.jpg`).slice()
+                images = images.concat(artworks)
 
             }
             return images
@@ -498,7 +499,8 @@ export default {
                 images.push(this.getCoverURL)
             }
             if ("artworks" in this.game) {
-                images.concat(this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${art.image_id}.jpg`).slice())
+                let artworks = this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${art.image_id}.jpg`).slice()
+                images = images.concat(artworks)
 
             }
             return images
