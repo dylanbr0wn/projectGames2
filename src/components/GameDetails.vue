@@ -277,7 +277,7 @@
                             </div>
                             <div class="d-flex align-content-center title justify-center"
                                  v-if="!('aggregated_rating' in game)"
-                                 style="height: 150px"
+
                             >No review data available.
                             </div>
                             <div class="d-flex align-content-center justify-center"
@@ -307,9 +307,15 @@
                     >
                         <v-expansion-panel-header>Age Rating</v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <div class="d-flex pa-2">
+                            <div class="d-flex align-content-center title justify-center"
+                                 v-if="getRatingImage === ''"
 
-                                <v-img :src="age_ratings[game.age_ratings[0].rating]"
+                            >No rating data available.
+                            </div>
+                            <div class="d-flex pa-2" v-if="getRatingImage !== ''">
+
+                                <v-img :src="getRatingImage"
+
                                        height="80"
                                        contain
                                        width="100"
@@ -321,7 +327,7 @@
                                 </div>
 
                             </div>
-                            <div v-if="getRatingSynopsis !== ''" class="d-flex px-7 body-2 mt-2"
+                            <div v-if="getRatingImage !== ''" class="d-flex px-7 body-2 mt-2"
                                  style="overflow: scroll; max-height: 200px">
                                 {{getRatingSynopsis}}
                             </div>
@@ -334,7 +340,13 @@
                     >
                         <v-expansion-panel-header>Creator Details</v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <div class="d-flex pa-2">
+                            <div class="d-flex align-content-center title justify-center"
+                                 v-if="!('involved_companies' in this.game)"
+
+                            >No creator data available.
+                            </div>
+
+                            <div class="d-flex pa-2" v-if="'involved_companies' in this.game">
                                 <v-list three-line subheader disabled>
                                     <v-list-item v-if="getDeveloper !== ''">
                                         <v-list-item-content>
@@ -469,16 +481,25 @@ export default {
             }
         },
         getImages() {
-            let images = this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_1080p/${art.image_id}.jpg`).slice()
+            let images = []
             if (this.getCoverURL !== '') {
                 images.push(this.getCoverURL)
             }
+            if ("artworks" in this.game) {
+                images.concat(this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_1080p/${art.image_id}.jpg`).slice())
+
+            }
             return images
+
         },
         getThumbImages() {
-            let images = this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${art.image_id}.jpg`).slice()
+            let images = []
             if (this.getCoverURL !== '') {
                 images.push(this.getCoverURL)
+            }
+            if ("artworks" in this.game) {
+                images.concat(this.game.artworks.map(art => `https://images.igdb.com/igdb/image/upload/t_screenshot_med/${art.image_id}.jpg`).slice())
+
             }
             return images
         },
@@ -515,11 +536,28 @@ export default {
             }
         },
         getRatingSynopsis() {
-            if ("synopsis" in this.game.age_ratings[0]) {
-                return this.game.age_ratings[0].synopsis
+            if ("age_ratings" in this.game) {
+                if ("synopsis" in this.game.age_ratings[0]) {
+                    return this.game.age_ratings[0].synopsis
+                } else {
+                    return "No rating synposis available."
+                }
             } else {
-                return ''
+                return "No rating synposis available."
             }
+
+        },
+        getRatingImage() {
+            if ("age_ratings" in this.game) {
+                if ("rating" in this.game.age_ratings[0]) {
+                    return this.age_ratings[this.game.age_ratings[0].rating]
+                } else {
+                    return ''
+                }
+            } else {
+                return ""
+            }
+
         },
 
 
