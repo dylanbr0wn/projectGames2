@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row style="width:100%">
+        <v-row style="width:100%;">
             <v-col
                     cols="12"
                     sm="8"
@@ -16,7 +16,6 @@
                 <v-card
                         v-if="isLoaded"
                         height="200"
-                        hover
                         color="white"
 
                 >
@@ -55,13 +54,12 @@
                         v-if="isLoaded"
                         height="550"
                         class="mt-10"
-                        hover
                 >
 
                     <v-tabs
                             v-model="tab"
                             grow
-                            dark
+
                             show-arrows
                             class="white--text"
                     >
@@ -80,6 +78,10 @@
                                     Genre: <span class="body-2">{{getGenres}}</span>
                                     <v-divider></v-divider>
                                 </v-card-subtitle>
+                                <v-card-subtitle v-if="getThemes !== ''" class="subtitle-1 py-1 ml-5 ml-5">
+                                    Themes: <span class="body-2">{{getThemes}}</span>
+                                    <v-divider></v-divider>
+                                </v-card-subtitle>
                                 <v-card-subtitle v-if="getGameModes !== ''" class="subtitle-1 py-1 ml-5">Game Modes:
                                     <span class="body-2">{{getGameModes}}</span>
                                     <v-divider></v-divider>
@@ -88,22 +90,7 @@
                                     <span class="body-2">{{getPlatforms}}</span>
                                     <v-divider></v-divider>
                                 </v-card-subtitle>
-                                <v-card-subtitle v-if="getDeveloper !== ''" class="subtitle-1 py-1 ml-5">Developer:
-                                    <span class="body-2">{{getDeveloper}}</span>
-                                    <v-divider></v-divider>
-                                </v-card-subtitle>
-                                <v-card-subtitle v-if="getPublisher !== ''" class="subtitle-1 py-1 ml-5">Publisher:
-                                    <span class="body-2">{{getPublisher}}</span>
-                                    <v-divider></v-divider>
-                                </v-card-subtitle>
-                                <v-card-subtitle v-if="getPorter !== ''" class="subtitle-1 py-1 ml-5">Porting: <span
-                                        class="body-2">{{getPorter}}</span>
-                                    <v-divider></v-divider>
-                                </v-card-subtitle>
-                                <v-card-subtitle v-if="getSupporting !== ''" class="subtitle-1 py-1 ml-5">Supporting:
-                                    <span class="body-2">{{getSupporting}}</span>
-                                    <v-divider></v-divider>
-                                </v-card-subtitle>
+
 
                                 <v-card-subtitle v-if="game.summary !== ''" class="subtitle-1 py-1 ml-5">Summary:
                                 </v-card-subtitle>
@@ -270,70 +257,123 @@
                     ></v-skeleton-loader>
                 </v-card>
 
-                <v-card
+
+                <v-expansion-panels
                         v-if="isLoaded"
-                        height="550"
-                        hover
+                        accordion
+                        mandatory
+
+                        style="max-height: 700px"
+
                 >
-                    <div class="d-flex display-1 font-weight-light align-content-center justify-center pa-5">Reviews
-                    </div>
-                    <div class="d-flex align-content-center display-2 justify-center"
-                         v-if="'aggregated_rating' in game"
-                    >{{game.aggregated_rating}}%
-                    </div>
-                    <div class="d-flex align-content-center title justify-center"
-                         v-if="!('aggregated_rating' in game)"
-                         style="height: 150px"
-                    >No review data available.
-                    </div>
-                    <div class="d-flex align-content-center justify-center"
-                         v-if="'aggregated_rating' in game"
-                         style=""
+                    <v-expansion-panel
+
                     >
+                        <v-expansion-panel-header>Reviews</v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <div class="d-flex align-content-center display-2 justify-center"
+                                 v-if="'aggregated_rating' in game"
+                            >{{game.aggregated_rating}}%
+                            </div>
+                            <div class="d-flex align-content-center title justify-center"
+                                 v-if="!('aggregated_rating' in game)"
+                                 style="height: 150px"
+                            >No review data available.
+                            </div>
+                            <div class="d-flex align-content-center justify-center"
+                                 v-if="'aggregated_rating' in game"
+                                 style=""
+                            >
 
 
-                        <v-rating
+                                <v-rating
 
-                                :value="game.aggregated_rating/20"
-                                readonly
-                                large
-                                background-color="black"
-                                color="black"
-                        ></v-rating>
-                    </div>
-                    <div class="d-flex align-content-center justify-center"
-                         v-if="'aggregated_rating' in game"
-                    >Average from {{game.aggregated_rating_count}} reviews
-                    </div>
-                    <v-divider class="my-3"></v-divider>
-                    <div class="d-flex display-1 font-weight-light align-content-center justify-center pa-2">Age
-                        Rating
-                    </div>
-                    <div class="d-flex pa-2">
+                                        :value="game.aggregated_rating/20"
+                                        readonly
+                                        large
 
-                        <v-img :src="age_ratings[game.age_ratings[0].rating]"
-                               height="80"
-                               contain
-                               width="100"
-                               class="ml-5"
-                        >
-                        </v-img>
-                        <div class="d-flex align-content-center justify-center ml-2">{{getAgeRating}}</div>
+                                ></v-rating>
+                            </div>
+                            <div class="d-flex align-content-center justify-center"
+                                 v-if="'aggregated_rating' in game"
+                            >Average from {{game.aggregated_rating_count}} reviews
+                            </div>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
 
-                    </div>
-                    <div class="d-flex px-7 body-2 mt-2" style="overflow: scroll; height: 140px">
-                        {{game.age_ratings[0].synopsis}}
-                    </div>
+                    <v-expansion-panel
 
 
-                </v-card>
-                <v-card
-                        height="200"
-                        class="mt-10"
-                        hover
-                >
+                    >
+                        <v-expansion-panel-header>Age Rating</v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <div class="d-flex pa-2">
 
-                </v-card>
+                                <v-img :src="age_ratings[game.age_ratings[0].rating]"
+                                       height="80"
+                                       contain
+                                       width="100"
+                                       class="ml-5"
+                                >
+                                </v-img>
+                                <div class="d-flex align-content-center body-2 justify-center ml-2 px-3">
+                                    {{getAgeRating}}
+                                </div>
+
+                            </div>
+                            <div v-if="getRatingSynopsis !== ''" class="d-flex px-7 body-2 mt-2"
+                                 style="overflow: scroll; max-height: 200px">
+                                {{getRatingSynopsis}}
+                            </div>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+
+                    <v-expansion-panel
+
+
+                    >
+                        <v-expansion-panel-header>Creator Details</v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <div class="d-flex pa-2">
+                                <v-list three-line subheader disabled>
+                                    <v-list-item v-if="getDeveloper !== ''">
+                                        <v-list-item-content>
+                                            <v-list-item-title>Developer:</v-list-item-title>
+                                            <v-list-item-subtitle>{{getDeveloper}}</v-list-item-subtitle>
+                                        </v-list-item-content>
+
+                                    </v-list-item>
+                                    <v-divider v-if="getPublisher !== ''"></v-divider>
+                                    <v-list-item v-if="getPublisher !== ''">
+                                        <v-list-item-content>
+                                            <v-list-item-title>Publisher:</v-list-item-title>
+                                            <v-list-item-subtitle>{{getPublisher}}</v-list-item-subtitle>
+                                        </v-list-item-content>
+
+                                    </v-list-item>
+                                    <v-divider v-if="getPorter !== ''"></v-divider>
+                                    <v-list-item v-if="getPorter !== ''">
+                                        <v-list-item-content>
+                                            <v-list-item-title>Porting:</v-list-item-title>
+                                            <v-list-item-subtitle>{{getPorter}}</v-list-item-subtitle>
+                                        </v-list-item-content>
+
+                                    </v-list-item>
+                                    <v-divider v-if="getSupporting !== ''"></v-divider>
+                                    <v-list-item v-if="getSupporting !== ''">
+                                        <v-list-item-content>
+                                            <v-list-item-title>Supporting:</v-list-item-title>
+                                            <v-list-item-subtitle>{{getSupporting}}</v-list-item-subtitle>
+                                        </v-list-item-content>
+
+                                    </v-list-item>
+
+                                </v-list>
+                            </div>
+
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
 
             </v-col>
         </v-row>
@@ -414,6 +454,13 @@ export default {
                 return ''
             }
         },
+        getThemes() {
+            if ("themes" in this.game) {
+                return this.game.themes.map(theme => theme.name).join(', ')
+            } else {
+                return ''
+            }
+        },
         getPlatforms() {
             if ("platforms" in this.game) {
                 return this.game.platforms.map(plat => plat.name).join(', ')
@@ -466,7 +513,14 @@ export default {
             } else {
                 return ''
             }
-        }
+        },
+        getRatingSynopsis() {
+            if ("synopsis" in this.game.age_ratings[0]) {
+                return this.game.age_ratings[0].synopsis
+            } else {
+                return ''
+            }
+        },
 
 
     }
@@ -480,5 +534,10 @@ export default {
 
     .card-title {
         letter-spacing: 5px;
+    }
+
+    .back-black {
+        background-color: black;
+        color: white;
     }
 </style>

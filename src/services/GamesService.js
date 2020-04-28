@@ -10,63 +10,6 @@ export default {
       }
     })
   },
-
-  getListCover(coverList) {
-    return Api().get('listCover/', {
-      params: {
-        coverList: coverList
-      }
-    })
-  },
-  getCompanies(companyList) {
-    return Api().get('gameCompanies/', {
-      params: {
-        companyList: companyList
-      }
-    })
-  },
-  getCompanyNames(companyNames) {
-    return Api().get('companyNames/', {
-      params: {
-        companyNames: companyNames
-      }
-    })
-  },
-  getRelatedGames(gameList) {
-    return Api().get('relatedGames/', {
-      params: {
-        gameList: gameList
-      }
-    })
-  },
-  getPlatforms(platforms) {
-    return Api().get('getPlatforms/', {
-      params: {
-        platforms: platforms
-      }
-    })
-  },
-  getAgeRatings(ratings) {
-    return Api().get('ageRatings/', {
-      params: {
-        ratings: ratings
-      }
-    })
-  },
-  getCover(cover) {
-    return Api().get('cover/', {
-      params: {
-        cover: cover
-      }
-    })
-  },
-  getArtworks(artworks) {
-    return Api().get('artworks/', {
-      params: {
-        artworks: artworks
-      }
-    })
-  },
   searchGame(query, page, itemsPerPage) {
     return Api().get('search/', {
       params: {
@@ -84,17 +27,4 @@ export default {
     })
   },
 }
-// fetchGames() {
-//   return Api().get('gameList')
-// },
-//
-// updatePost(params) {
-//   return Api().put('game/' + params.id, params)
-// },
-//
-
-//
-// deletePost(id) {
-//   return Api().delete('game/' + id)
-// },
 

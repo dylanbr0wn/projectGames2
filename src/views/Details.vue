@@ -1,12 +1,10 @@
 <template>
-  <v-container fluid fill-height>
     <GameDetails
             :game=game
             :isLoaded="isLoaded"
             v-on:goToDetail="goToDetail"
 
     />
-  </v-container>
 </template>
 
 <script>
@@ -32,25 +30,16 @@
       this.getGameDetails(this.id);
     },
     methods: {
-      fixGameScore(score) {
-        score = String(score);
-        const fixed = score.replace(/\/\d/i, '');
-        this.game.rating = Number(fixed);
-      },
       getGameDetails(id) {
         GamesService.getGame(id).then(res => {
-          this.game = res.data[0]
-          this.parseGame();
+            this.game = res.data[0]
+            if ("aggregated_rating" in this.game) {
+                this.game.aggregated_rating = Math.round((this.game.aggregated_rating + Number.EPSILON))
+            }
+            this.isLoaded = true
 
         })
       },
-      parseGame() {
-        if ("aggregated_rating" in this.game) {
-          this.game.aggregated_rating = Math.round((this.game.aggregated_rating + Number.EPSILON))
-        }
-        this.isLoaded = true
-      },
-
       goToDetail(id) {
         this.isLoaded = false;
         this.game = {};
